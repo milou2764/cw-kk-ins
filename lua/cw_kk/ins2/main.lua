@@ -7,18 +7,18 @@ CW_KK_QNADE = 12
 CW_KK_QKNIFE = 13
 
 KK_INS2_NO_ACTION = 0
-KK_INS2_SHOTGUN_LOAD_FIRST = 1			// [1] = delay before SetClip1(+1)
-KK_INS2_SHOTGUN_UNLOAD_ONE = 2			// [1] = delay before SetClip1(-1)
-KK_INS2_RIFLEGL_UNLOAD_ONE = 3			// [4] = delay before SetClip1(-1)
-KK_INS2_REVOLVER_SLOW_UNLOAD = 4		// [1] = delay before SetClip1(0)
-KK_INS2_REVOLVER_SPEED_UNLOAD = 5		// [4] = delay before SetClip1(0)
-KK_INS2_STRIPPERCLIP_UNLOAD_ONE = 3		// [4] = delay before SetClip1(-1)
+KK_INS2_SHOTGUN_LOAD_FIRST = 1			-- [1] = delay before SetClip1(+1)
+KK_INS2_SHOTGUN_UNLOAD_ONE = 2			-- [1] = delay before SetClip1(-1)
+KK_INS2_RIFLEGL_UNLOAD_ONE = 3			-- [4] = delay before SetClip1(-1)
+KK_INS2_REVOLVER_SLOW_UNLOAD = 4		-- [1] = delay before SetClip1(0)
+KK_INS2_REVOLVER_SPEED_UNLOAD = 5		-- [4] = delay before SetClip1(0)
+KK_INS2_STRIPPERCLIP_UNLOAD_ONE = 3		-- [4] = delay before SetClip1(-1)
 
 CustomizableWeaponry_KK = CustomizableWeaponry_KK or {}
 CustomizableWeaponry_KK.ins2 = CustomizableWeaponry_KK.ins2 or {}
 
-CustomizableWeaponry_KK.ins2.firstDeployEnabled = true			// 2do
-CustomizableWeaponry_KK.ins2.firstDeploySkip = -1				// 2do // -1 dont, n>0 - skip after n seconds of wep waiting in inventory
+CustomizableWeaponry_KK.ins2.firstDeployEnabled = true -- 2do
+CustomizableWeaponry_KK.ins2.firstDeploySkip = -1 -- 2do // -1 dont, n>0 - skip after n seconds of wep waiting in inventory
 CustomizableWeaponry_KK.ins2.holsterTransitionsEnabled = true
 CustomizableWeaponry_KK.ins2.discardEjectedAmmo = false
 
@@ -39,9 +39,9 @@ for _,v in pairs({
 end
 
 local folder
-if SERVER then
-    folder = "cw_kk/ins2/server/"
-    for k, v in pairs(file.Find(folder .. "*", "LUA")) do
+folder = "cw_kk/ins2/server/"
+for k, v in pairs(file.Find(folder .. "*", "LUA")) do
+    if SERVER then
         include(folder .. v)
     end
 end
@@ -52,17 +52,15 @@ for k, v in pairs(file.Find(folder .. "*", "LUA")) do
 	include(folder .. v)
 end
 
-if CLIENT then
-    folder = "cw_kk/ins2/client/"
-    for k, v in pairs(file.Find(folder .. "*", "LUA")) do
-        AddCSLuaFile(folder .. v)
-        if CLIENT then
-            include(folder .. v)
-        end
+folder = "cw_kk/ins2/client/"
+for k, v in pairs(file.Find(folder .. "*", "LUA")) do
+    AddCSLuaFile(folder .. v)
+    if CLIENT then
+        include(folder .. v)
     end
 end
 
-local folder = "cw_kk/ins2/ext/"
+folder = "cw_kk/ins2/ext/"
 for k, v in pairs(file.Find(folder .. "*", "LUA")) do
 	AddCSLuaFile(folder .. v)
 	include(folder .. v)
