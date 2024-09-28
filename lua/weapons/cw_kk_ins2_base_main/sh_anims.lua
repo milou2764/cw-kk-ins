@@ -1,6 +1,6 @@
 
 local SP = game.SinglePlayer()
-local MP = !SP
+local MP = not SP
 local isBipod, wasBipod, cycle, suffix, anim, prefix, rate, clip
 
 if CLIENT then
@@ -23,7 +23,7 @@ if CLIENT then
 			suffix = ""
 		end
 
-		if isBipod != wasBipod and wasBipod != nil then
+		if isBipod ~= wasBipod and wasBipod ~= nil then
 			if self.Sequence:find("reload") and cycle < 1 then
 				self._KK_INS2_postReloadBipodSwitch = true
 			else
@@ -54,11 +54,11 @@ if CLIENT then
 		end
 
 		canDoStuff =
-			self:isReticleActive() and								// no swapping during "action" animation
-			(self.dt.State != CW_CUSTOMIZE) and 					// no swapping in CW Menu
-			not (self.KKINS2Nade and self.dt.PinPulled) and			// no swapping after pin-pull
-			not (self.GlobalDelay > CurTime()) and					// ??
-			self._KK_INS2_PickedUp and								// no swapping before unboxed (although it should be covered by pickup anim)
+			self:isReticleActive() and								-- no swapping during "action" animation
+			(self.dt.State ~= CW_CUSTOMIZE) and 					-- no swapping in CW Menu
+			not (self.KKINS2Nade and self.dt.PinPulled) and			-- no swapping after pin-pull
+			not (self.GlobalDelay > CurTime()) and					-- ??
+			self._KK_INS2_PickedUp and								-- no swapping before unboxed (although it should be covered by pickup anim)
 			true
 
 		wasSprint = self._KK_INS2_wasSprint
@@ -66,7 +66,7 @@ if CLIENT then
 
 		isSprint = isSprint and canDoStuff
 
-		if isSprint != wasSprint and wasSprint != nil then
+		if isSprint ~= wasSprint and wasSprint ~= nil then
 			if isSprint then
 				self:sprintAnimFunc()
 			elseif canDoStuff then
@@ -86,9 +86,9 @@ if CLIENT then
 				self._KK_INS2_PickedUp
 
 			wasCrawling = self._KK_INS2_wasCrawling
-			isCrawling = self:IsOwnerCrawling() and canDoStuff // and not (self.dt.State == CW_HOLSTER_START or self.dt.State == CW_HOLSTER_END)
+			isCrawling = self:IsOwnerCrawling() and canDoStuff -- and not (self.dt.State == CW_HOLSTER_START or self.dt.State == CW_HOLSTER_END)
 
-			if isCrawling != wasCrawling and wasCrawling != nil then
+			if isCrawling ~= wasCrawling and wasCrawling ~= nil then
 				if isCrawling then
 					self:proneAnimFunc()
 				elseif canDoStuff then
@@ -111,7 +111,7 @@ if CLIENT then
 		if canDoStuff then
 			if isSafe then
 				self:safetyAnimFunc()
-			elseif isSafe != wasSafe then
+			elseif isSafe ~= wasSafe then
 				self:idleAnimFunc()
 			end
 		elseif wasSafe then
@@ -141,7 +141,7 @@ if CLIENT then
 		clip = self:Clip1()
 
 		if self.dt.INS2GLActive then
-			if !self.M203Chamber and self.KK_INS2_EmptyIdleGL then
+			if not self.M203Chamber and self.KK_INS2_EmptyIdleGL then
 				suffix = "_empty" .. self._KK_INS2_customEmptySuffix
 			end
 		else
@@ -177,7 +177,7 @@ if CLIENT then
 		clip = self:Clip1()
 
 		if self.dt.INS2GLActive then
-			if !self.M203Chamber and self.KK_INS2_EmptyIdleGL then
+			if not self.M203Chamber and self.KK_INS2_EmptyIdleGL then
 				suffix = "_empty" .. self._KK_INS2_customEmptySuffix
 			end
 		else
@@ -186,7 +186,7 @@ if CLIENT then
 			end
 		end
 
-		if self:isAiming() /*or self.Slot == 1*/ then
+		if self:isAiming() then -- or self.Slot == 1
 			suffix = suffix .. "_aim"
 		end
 
@@ -205,7 +205,7 @@ if CLIENT then
 		clip = self:Clip1()
 
 		if self.dt.INS2GLActive then
-			if !self.M203Chamber and self.KK_INS2_EmptyIdleGL then
+			if not self.M203Chamber and self.KK_INS2_EmptyIdleGL then
 				suffix = "_empty" .. self._KK_INS2_customEmptySuffix
 			end
 		else
@@ -231,7 +231,7 @@ if CLIENT then
 		clip = self:Clip1()
 
 		if self.dt.INS2GLActive then
-			if !self.M203Chamber and self.KK_INS2_EmptyIdleGL then
+			if not self.M203Chamber and self.KK_INS2_EmptyIdleGL then
 				suffix = "_empty" .. self._KK_INS2_customEmptySuffix
 			end
 		else
@@ -267,7 +267,7 @@ function SWEP:idleAnimFunc()
 			cycle = 1
 		end
 	else
-		anim = "idle" // only idle anims are for base_ prefix, it used to use draw anim for others anyway
+		anim = "idle" -- only idle anims are for base_ prefix, it used to use draw anim for others anyway
 		-- anim = "holster"
 	end
 
@@ -278,7 +278,7 @@ function SWEP:idleAnimFunc()
 	clip = self:Clip1()
 
 	if self.dt.INS2GLActive then
-		if !self.M203Chamber and self.KK_INS2_EmptyIdleGL then
+		if not self.M203Chamber and self.KK_INS2_EmptyIdleGL then
 			suffix = "_empty" .. self._KK_INS2_customEmptySuffix
 		end
 	else
@@ -328,7 +328,8 @@ function SWEP:pickupAnimFunc(mode)
 	end
 
 	if CLIENT then
-		if self.Sequence != self.Animations[mode .. anim] or self.CW_VM:GetCycle() > 0.99 then
+        local cond1 = self.Sequence ~= self.Animations[mode .. anim] or self.CW_VM:GetCycle() > 0.99
+		if cond1 and IsValid(self) then
 			self:sendWeaponAnim(mode .. anim .. suffix, self.DrawSpeed, 0)
 		end
 	end
@@ -348,7 +349,7 @@ function SWEP:drawAnimFunc()
 	clip = self:Clip1()
 
 	if self.dt.INS2GLActive then
-		if !self.M203Chamber and self.KK_INS2_EmptyIdleGL then
+		if not self.M203Chamber and self.KK_INS2_EmptyIdleGL then
 			suffix = "_empty" .. self._KK_INS2_customEmptySuffix
 		end
 	else
@@ -393,7 +394,7 @@ function SWEP:meleeAnimFunc()
 end
 
 function SWEP:bayonetAnimFunc()
-	if self.KKINS2Nade then		// I believe grenades wont have bayonets any time soon
+	if self.KKINS2Nade then -- I believe grenades wont have bayonets any time soon
 		return
 	end
 
@@ -409,7 +410,7 @@ function SWEP:bayonetAnimFunc()
 	end
 
 	self:sendWeaponAnim(prefix .. "stab" .. suffix, rate, cycle)
-end //*/
+end
 
 function SWEP:fireAnimFunc()
 	clip = self:Clip1()
@@ -433,7 +434,7 @@ function SWEP:fireAnimFunc()
 	end
 
 	self:sendWeaponAnim(prefix .. "fire" .. suffix, rate, cycle)
-end //*/
+end
 
 function SWEP:holsterAnimFunc()
 	prefix = self:getForegripMode()
@@ -443,7 +444,7 @@ function SWEP:holsterAnimFunc()
 	clip = self:Clip1()
 
 	if self.dt.INS2GLActive then
-		if !self.M203Chamber and self.KK_INS2_EmptyIdleGL then
+		if not self.M203Chamber and self.KK_INS2_EmptyIdleGL then
 			suffix = "_empty" .. self._KK_INS2_customEmptySuffix
 		end
 	else
@@ -463,17 +464,17 @@ function SWEP:holsterAnimFunc()
 	self:sendWeaponAnim(prefix .. "holster" .. suffix, self.HolsterSpeed, cycle)
 end
 
-//-----------------------------------------------------------------------------
-// reticle inactivity anims
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- reticle inactivity anims
+-------------------------------------------------------------------------------
 
 if CLIENT then
 	SWEP.reticleInactivityCallbacksRaw = {
 		-- ["reload"] = 0.1,			// Actually, reloads anims are only played using
 		-- ["reload_empty"] = 0.1,		// these two. For now.
-		// not anymoor ^^
+		-- not anymoor ^^
 
-		// I really should generate this from table of prefixes|anims|suffixes|suffixes|suffixes lol
+		-- I really should generate this from table of prefixes|anims|suffixes|suffixes|suffixes lol
 
 		["base_pickup"] = 0.1,
 		["base_draw"] = -0.2,
@@ -493,7 +494,7 @@ if CLIENT then
 		["base_reload_stripper_1_empty"] = 0.1,
 		["base_reload_stripper_2"] = 0.1,
 		["base_reload_stripper_2_empty"] = 0.1,
-		["base_reload_stripper_3"] = 0.1, // yes, I know FAS2 SKS
+		["base_reload_stripper_3"] = 0.1, -- yes, I know FAS2 SKS
 		["base_reload_stripper_3_empty"] = 0.1,
 		["base_insert"] = 0.1,
 		-- ["base_holster"] = 0.1,
@@ -599,57 +600,52 @@ if CLIENT then
 		["throw_short"] = 0.1,
 	}
 
-	// call me from init callback
+	-- call me from init callback
 	function SWEP:setupReticleInactivityCallbacks()
 		self.animCallbacks = self.animCallbacks or {}
 
 		local vm = self.CW_VM
 
 		for animName,add in pairs(self.reticleInactivityCallbacksRaw) do
-			if animName == "BaseClass" then
-				continue
-			end
+			if animName ~= "BaseClass" then
 
-			local seqName = self.Animations[animName]
+                local seqName = self.Animations[animName]
+                if seqName then
 
-			if not seqName then
-				continue
-			end
+                    if istable(seqName) then
+                        seqName = seqName[1]
+                    end
 
-			if istable(seqName) then
-				seqName = seqName[1]
-			end
+                    local _, seqDur = vm:LookupSequence(seqName)
 
-			local _, seqDur = vm:LookupSequence(seqName)
+                    if seqDur > 0 then
+                        local UnPredictedCurTime = UnPredictedCurTime
+                        local newFunc
 
-			if seqDur <= 0 then
-				continue
-			end
+                        newFunc = function(wep)
+                            wep.reticleInactivity = UnPredictedCurTime() + seqDur + add
+                        end
 
-			local UnPredictedCurTime = UnPredictedCurTime
-			local newFunc
-
-			newFunc = function(wep)
-				wep.reticleInactivity = UnPredictedCurTime() + seqDur + add
-			end
-
-			if self.animCallbacks[animName] then
-				local oldFunc = self.animCallbacks[animName]
-				self.animCallbacks[animName] = function(wep)
-					newFunc(wep)
-					oldFunc(wep)
-				end
-			else
-				self.animCallbacks[animName] = newFunc
+                        if self.animCallbacks[animName] then
+                            local oldFunc = self.animCallbacks[animName]
+                            self.animCallbacks[animName] = function(wep)
+                                newFunc(wep)
+                                oldFunc(wep)
+                            end
+                        else
+                            self.animCallbacks[animName] = newFunc
+                        end
+                    end
+                end
 			end
 		end
 
 	end
 end
 
-//-----------------------------------------------------------------------------
-// soundtable looping anims
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- soundtable looping anims
+-------------------------------------------------------------------------------
 
 if CLIENT then
 	SWEP.soundTableLoopsRaw = {
@@ -671,45 +667,42 @@ if CLIENT then
 		for animName,_ in pairs(self.soundTableLoopsRaw) do
 			local seqName = self.Animations[animName]
 
-			if not seqName or !isstring(seqName) then
-				continue
-			end
+			if seqName and isstring(seqName) then
 
-			local soundTable = self.Sounds[seqName]
+                local soundTable = self.Sounds[seqName]
 
-			if not soundTable then
-				continue
-			end
+                if soundTable then
+                    local _, seqDur = vm:LookupSequence(seqName)
 
-			local _, seqDur = vm:LookupSequence(seqName)
+                    local patch = {
+                        kkwashere = true,
+                        time = seqDur,
+                        sound = "",
+                        callback = function(wep)
+                            wep.CurSoundTable = soundTable
+                            wep.CurSoundEntry = 0
+                            wep.SoundTime = UnPredictedCurTime()
+                            wep.SoundSpeed = 1
+                        end
+                    }
 
-			local patch = {
-				kkwashere = true,
-				time = seqDur,
-				sound = "",
-				callback = function(wep)
-					wep.CurSoundTable = soundTable
-					wep.CurSoundEntry = 0
-					wep.SoundTime = UnPredictedCurTime()
-					wep.SoundSpeed = 1
-				end
-			}
+                    local lastIndex = table.Count(soundTable)
+                    local lastEntry = soundTable[lastIndex]
 
-			local lastIndex = table.Count(soundTable)
-			local lastEntry = soundTable[lastIndex]
-
-			if lastEntry.kkwashere then // just to be sure we dont change weapons.GetStored
-				soundTable[lastIndex] = patch
-			else
-				soundTable[lastIndex + 1] = patch
-			end
+                    if lastEntry.kkwashere then -- just to be sure we dont change weapons.GetStored
+                        soundTable[lastIndex] = patch
+                    else
+                        soundTable[lastIndex + 1] = patch
+                    end
+                end
+            end
 		end
 	end
 end
 
-//-----------------------------------------------------------------------------
-// reload progress anims
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- reload progress anims
+-------------------------------------------------------------------------------
 
 if CLIENT then
 	SWEP.reloadProgressAnimsRaw = {
@@ -777,7 +770,7 @@ if CLIENT then
 
 		["gl_on_reload"] = true,
 
-		// test
+		-- test
 		["gl_turn_on"] = true,
 		["gl_turn_off"] = true,
 		["gl_turn_on_full"] = true,
@@ -790,17 +783,15 @@ if CLIENT then
 		for animName, _ in pairs(self.reloadProgressAnimsRaw) do
 			local seqName = self.Animations[animName]
 
-			if not seqName then
-				continue
-			end
-
-			if istable(seqName) then
-				for _, seqName in pairs(seqName) do
-					self.reloadProgressAnims[seqName] = (self.ReloadTimes and self.ReloadTimes[seqName]) and self.ReloadTimes[seqName][2]
-				end
-			else
-				self.reloadProgressAnims[seqName] = (self.ReloadTimes and self.ReloadTimes[seqName]) and self.ReloadTimes[seqName][2]
-			end
+			if seqName then
+                if istable(seqName) then
+                    for _, seqName in pairs(seqName) do
+                        self.reloadProgressAnims[seqName] = (self.ReloadTimes and self.ReloadTimes[seqName]) and self.ReloadTimes[seqName][2]
+                    end
+                else
+                    self.reloadProgressAnims[seqName] = (self.ReloadTimes and self.ReloadTimes[seqName]) and self.ReloadTimes[seqName][2]
+                end
+            end
 		end
 	end
 end

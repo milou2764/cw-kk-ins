@@ -50,10 +50,10 @@ if CLIENT then
 					pt:SetNearZ(0)
 				end
 
-				// if dropped or in 3rd person, update pos
-				local nowner = !IsValid(wep.Owner) // dropped
-				local fowner = wep.Owner != LocalPlayer()
-				local lowner = wep.Owner == LocalPlayer() and wep.Owner:ShouldDrawLocalPlayer() // local player owns but in 3rd person
+				-- if dropped or in 3rd person, update pos
+				local nowner = !IsValid(wep.Owner) -- dropped
+				local fowner = wep.Owner ~= LocalPlayer()
+				local lowner = wep.Owner == LocalPlayer() and wep.Owner:ShouldDrawLocalPlayer() -- local player owns but in 3rd person
 
 				if (nowner or fowner or lowner) and IsValid(wep.WMEnt) then
 					local att = wep.WMEnt:GetAttachment(1)
