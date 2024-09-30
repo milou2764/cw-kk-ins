@@ -27,6 +27,7 @@ if CLIENT then
 			if self.Sequence:find("reload") and cycle < 1 then
 				self._KK_INS2_postReloadBipodSwitch = true
 			else
+                if not IsValid(self) then return end
 				if isBipod then
 					self:sendWeaponAnim("bipod_in" .. suffix)
 				else
