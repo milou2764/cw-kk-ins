@@ -499,7 +499,6 @@ function SWEP:DrawWorldModel()
 			m = EntGetBoneMatrix(self.Owner, EntLookupBone(self.Owner, "ValveBiped.Bip01_R_Hand"))
 
 			if not m then
-                Log.d(TAG, "return, could not get matrix")
 				return
 			end
 		end
@@ -520,7 +519,6 @@ function SWEP:DrawWorldModel()
 	end
 
 	if not IsValid(self.WMEnt) then
-        Log.d(TAG, "return, WMEnt not valid")
 		return
 	end
 
@@ -538,10 +536,7 @@ function SWEP:DrawWorldModel()
 	end
 
 	if not overrideVM then
-        Log.d(TAG, "calling DrawModel")
 		self.WMEnt:DrawModel()
-    else
-        Log.d(TAG, "overrideVM")
 	end
 
 	self:drawAttachmentsWorld(self.WMEnt)
