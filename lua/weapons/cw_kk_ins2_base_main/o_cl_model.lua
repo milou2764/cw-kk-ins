@@ -524,6 +524,7 @@ function SWEP:DrawWorldModel()
         self.WMEnt = self:createManagedCModel(self.WorldModel, RENDERGROUP_BOTH)
         self.WMEnt:SetNoDraw(true)
         self.WMEnt:SetupBones()
+        self:setupAttachmentWModels()
 	end
 
 	self.WMEnt:SetPos(pos)
