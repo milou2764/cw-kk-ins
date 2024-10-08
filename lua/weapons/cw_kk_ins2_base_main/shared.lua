@@ -86,15 +86,15 @@ SWEP.WeaponLength = 20
 SWEP.HolsterSpeed = 1
 SWEP.BoltActionSpeed = 1
 
-SWEP.hipBulletDelay = false // float
-SWEP.projectileClass = false // string
+SWEP.hipBulletDelay = false -- float
+SWEP.projectileClass = false -- string
 SWEP.projectileOffsetPos = Vector(0, 4, -6)
 SWEP.projectileOffsetAng = Angle(1.8, 0, 0)
 
 SWEP.projectileOffsetPosAim = Vector(0, 0, -6)
 
 SWEP.projectileRotation = Angle(0, 0, 0)
-SWEP.projectileFuse = false // float
+SWEP.projectileFuse = false -- float
 
 SWEP.stripperCapacity = 5
 
@@ -107,7 +107,7 @@ if CLIENT then
 	SWEP.Shell = "KK_INS2_40mm"
 	SWEP.ShellScale = 1
 	SWEP.ShellViewAttachmentName = "shell"
-	-- SWEP.ShellViewAttachmentID = -1 // lookup done in initialize
+	-- SWEP.ShellViewAttachmentID = -1 -- lookup done in initialize
 	SWEP.ShellViewAngleAlign = {Forward = 0, Right = 0, Up = -30}
 	SWEP.ShellWorldAttachmentID = 2
 	SWEP.ShellWorldAngleAlign = {Forward = 0, Right = 0, Up = 0}
@@ -116,7 +116,7 @@ if CLIENT then
 	SWEP.Shell2 = false
 	SWEP.Shell2Scale = 1
 	SWEP.Shell2ViewAttachmentName = "link"
-	-- SWEP.Shell2ViewAttachmentID = -1 // lookup done in initialize
+	-- SWEP.Shell2ViewAttachmentID = -1 -- lookup done in initialize
 	SWEP.Shell2ViewAngleAlign = {Forward = 0, Right = 0, Up = 0}
 	SWEP.Shell2WorldAttachmentID = 2
 	SWEP.Shell2WorldAngleAlign = {Forward = 0, Right = 0, Up = 0}
@@ -198,11 +198,11 @@ SWEP.autoCenterExclusions = {
 }
 
 local SP = game.SinglePlayer()
-local MP = !SP
+local MP = not SP
 
-//-----------------------------------------------------------------------------
-// CW_KK_MELEE is called by cw_kk_melee concommand
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- CW_KK_MELEE is called by cw_kk_melee concommand
+-------------------------------------------------------------------------------
 
 function SWEP:CW_KK_MELEE()
 	if SERVER then
@@ -221,24 +221,24 @@ function SWEP:CW_KK_MELEE()
 	end
 end
 
-//-----------------------------------------------------------------------------
-// IndividualThink for INS2 based sweps
-// currently used by DOI BAR
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- IndividualThink for INS2 based sweps
+-- currently used by DOI BAR
+-------------------------------------------------------------------------------
 
 function SWEP:IndividualThink_INS2() end
 
-//-----------------------------------------------------------------------------
-// IndividualThink for custom features
-// - INS2 styled bolt-action weapons
-// - crosshair, free aim settings enforcement
-// - reload time updates
-// - hands model changes
-// - belt bodygroups updates on viewmodels
-// - individual weapon properties updates
-// - animated bipod state transitions
-// - animated sprint, near-wall holster, safety firemode holster transitions
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- IndividualThink for custom features
+-- - INS2 styled bolt-action weapons
+-- - crosshair, free aim settings enforcement
+-- - reload time updates
+-- - hands model changes
+-- - belt bodygroups updates on viewmodels
+-- - individual weapon properties updates
+-- - animated bipod state transitions
+-- - animated sprint, near-wall holster, safety firemode holster transitions
+-------------------------------------------------------------------------------
 
 local cvarFA = GetConVar("cw_freeaim")
 local cvarFAAC = GetConVar("cw_freeaim_autocenter")
@@ -268,7 +268,7 @@ function SWEP:IndividualThink()
 
 		shouldDrawCrosshair = self.Owner:ShouldDrawLocalPlayer()
 		self.CrosshairEnabled = shouldDrawCrosshair
-		self.FadeCrosshairOnAim = !shouldDrawCrosshair
+		self.FadeCrosshairOnAim = not shouldDrawCrosshair
 
 		-- if self.AttachmentModelsVM.kk_ins2_ww2_knife then
 			-- self.DisableSprintViewSimulation = self.ActiveAttachments.kk_ins2_ww2_knife
@@ -276,11 +276,11 @@ function SWEP:IndividualThink()
 
 		if MP and not IsFirstTimePredicted() then return end
 
-		// 2b removed
-		// I guess
+		-- 2b removed
+		-- I guess
 		self:updateReloadTimes()
 
-		// and now, cosmetix
+		-- and now, cosmetix
 
 		self:updateHands()
 		self:updateBelt()
@@ -291,9 +291,9 @@ function SWEP:IndividualThink()
 	end
 end
 
-//-----------------------------------------------------------------------------
-// doBoltAction sets delays and plays bolt animation on shotguns/rifles
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- doBoltAction sets delays and plays bolt animation on shotguns/rifles
+-------------------------------------------------------------------------------
 
 SWEP.boltAction_isShot = false
 
@@ -341,11 +341,11 @@ function SWEP:doBoltAction()
 	end
 end
 
-//-----------------------------------------------------------------------------
-// OnDrop
-// - prepares first deploy animation to be replayed
-// - unloads allocated magazines if Mag System is installed
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- OnDrop
+-- - prepares first deploy animation to be replayed
+-- - unloads allocated magazines if Mag System is installed
+-------------------------------------------------------------------------------
 
 function SWEP:OnDrop(...)
 	self:PrepareForPickup(true)
@@ -365,11 +365,11 @@ function SWEP:OnDrop(...)
 	end
 end
 
-//-----------------------------------------------------------------------------
-// PrepareForPickup prepares first deploy animation to be played
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- PrepareForPickup prepares first deploy animation to be played
+-------------------------------------------------------------------------------
 
-SWEP._KK_INS2_PickedUp = !SP
+SWEP._KK_INS2_PickedUp = not SP
 
 local prefix, suffix
 
@@ -384,7 +384,7 @@ function SWEP:PrepareForPickup(drop)
 
 	self._KK_INS2_PickedUp = false
 
-	if CLIENT and !drop then
+	if CLIENT and not drop then
 		self:pickupAnimFunc()
 	end
 
@@ -415,9 +415,9 @@ function SWEP:PrepareForPickup(drop)
 	end
 end
 
-//-----------------------------------------------------------------------------
-// CW_KK_INS2_PREPAREFORPICKUP message calls PrepareForPickup on client
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- CW_KK_INS2_PREPAREFORPICKUP message calls PrepareForPickup on client
+-------------------------------------------------------------------------------
 
 if CLIENT then
 	usermessage.Hook("CW_KK_INS2_PREPAREFORPICKUP", function(um)
@@ -429,10 +429,10 @@ if CLIENT then
 	end)
 end
 
-//-----------------------------------------------------------------------------
-// toggleGLMode is code from SecondaryAttack that switches INS2GLActive state,
-// edited for customized grenade launcher behavior
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- toggleGLMode is code from SecondaryAttack that switches INS2GLActive state,
+-- edited for customized grenade launcher behavior
+-------------------------------------------------------------------------------
 
 local anim, reloadTime, reloadHalt, flag, unloadTime, _
 
@@ -490,11 +490,11 @@ function SWEP:toggleGLMode(IFTP)
 
 			if flag == KK_INS2_RIFLEGL_UNLOAD_ONE and clip > 0 then
 				CustomizableWeaponry.actionSequence.new(self, unloadTime, nil, function()
-					if not self.ReloadDelay then return end	// melee attack interruption
+					if not self.ReloadDelay then return end	-- melee attack interruption
 
 					self:SetClip1(clip - 1)
 
-					if !CustomizableWeaponry_KK.ins2.discardEjectedAmmo then
+					if not CustomizableWeaponry_KK.ins2.discardEjectedAmmo then
 						local ammo = self.Owner:GetAmmoCount(self.Primary.Ammo)
 						self.Owner:SetAmmo(ammo + 1, self.Primary.Ammo)
 					end
@@ -537,9 +537,9 @@ function SWEP:toggleGLMode(IFTP)
 	end
 end
 
-//-----------------------------------------------------------------------------
-// Prone Addon mashup
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- Prone Addon mashup
+-------------------------------------------------------------------------------
 
 if SERVER then
 	local wasProne, isProne
@@ -556,7 +556,7 @@ if SERVER then
 				self.dt.State = CW_IDLE
 			end
 
-			if wasProne and !isProne then
+			if wasProne and not isProne then
 				local t = math.max(self.GlobalDelay, CurTime() + delay)
 
 				self:SetNextPrimaryFire(t)

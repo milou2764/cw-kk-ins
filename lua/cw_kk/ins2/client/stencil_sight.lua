@@ -1,5 +1,3 @@
-
-
 CustomizableWeaponry_KK.ins2.stencilSight = CustomizableWeaponry_KK.ins2.stencilSight or {}
 
 CustomizableWeaponry_KK.ins2.stencilSight.lenses = {}
@@ -89,7 +87,7 @@ function CustomizableWeaponry_KK.ins2.stencilSight:elementRender(wep, att)
 	if not wep.AttachmentModelsVM then return end
 	if not wep.AttachmentModelsVM[att.name] then return end
 
-	wep._KK_INS2_stencilsDisableLaser = false // this got little NASTY
+	wep._KK_INS2_stencilsDisableLaser = false -- this got little NASTY
 		for _,lam in pairs(tblLams) do
 			if wep.ActiveAttachments[lam] then
 				CW2ATTS[lam].elementRender(wep)

@@ -1,9 +1,8 @@
-
 local SP = game.SinglePlayer()
 
-//-----------------------------------------------------------------------------
-// SetupDataTables edited to initialize INS2LAMMode and INS2GLActive
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- SetupDataTables edited to initialize INS2LAMMode and INS2GLActive
+-------------------------------------------------------------------------------
 
 function SWEP:SetupDataTables()
 	self:NetworkVar("Int", 0, "State")
@@ -17,9 +16,9 @@ function SWEP:SetupDataTables()
 	self:NetworkVar("Angle", 0, "ViewOffset")
 end
 
-//-----------------------------------------------------------------------------
-// simulateRecoil edited to not to clamp SWEP.FireMove
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- simulateRecoil edited to not to clamp SWEP.FireMove
+-------------------------------------------------------------------------------
 
 function SWEP:simulateRecoil()
 	if self.dt.State ~= CW_AIMING and not self.freeAimOn then
@@ -58,9 +57,9 @@ function SWEP:simulateRecoil()
 	end
 end
 
-//-----------------------------------------------------------------------------
-// CycleFiremodes edited to apply different delays depending on animation
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- CycleFiremodes edited to apply different delays depending on animation
+-------------------------------------------------------------------------------
 
 SWEP.FireModeDelayNormal = 1
 SWEP.FireModeDelayShort = 0.25
@@ -90,13 +89,13 @@ function SWEP:CycleFiremodes()
 
 	local delay = self.FireModeDelayNormal
 
-	if (#self.FireModes < 3) then // why # instead of table.Count?
+	if (#self.FireModes < 3) then -- why # instead of table.Count?
 		delay = self.FireModeDelayShort
 	elseif lastFM == "safe" then
 		delay = self.FireModeDelayFromSafe
 	end
 
-	if self.FireMode != self.FireModes[t.last] and self.FireModes[t.last] then
+	if self.FireMode ~= self.FireModes[t.last] and self.FireModes[t.last] then
 		local CT = CurTime()
 		self:SelectFiremode(self.FireModes[t.last])
 		self:SetNextPrimaryFire(CT + delay)
@@ -105,9 +104,9 @@ function SWEP:CycleFiremodes()
 	end
 end
 
-//-----------------------------------------------------------------------------
-// SelectFiremode edited to use renamed umsg
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- SelectFiremode edited to use renamed umsg
+-------------------------------------------------------------------------------
 
 function SWEP:SelectFiremode(n)
 	if CLIENT then
@@ -131,9 +130,9 @@ function SWEP:SelectFiremode(n)
 	umsg.End()
 end
 
-//-----------------------------------------------------------------------------
-// CW_ReceiveFireMode edited to play firemode animation on client
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- CW_ReceiveFireMode edited to play firemode animation on client
+-------------------------------------------------------------------------------
 
 if CLIENT then
 	local ply, mode, wep, lastFM
@@ -157,7 +156,7 @@ if CLIENT then
 					wep.BulletDisplay = t.buldis
 					wep.CheckTime = CurTime() + 2
 
-					if lastFM != "safe" then
+					if lastFM ~= "safe" then
 						wep:firemodeAnimFunc()
 					end
 				end
@@ -168,9 +167,9 @@ if CLIENT then
 	usermessage.Hook("CW_KK_INS2_FIREMODE", CW_ReceiveFireMode)
 end
 
-//-----------------------------------------------------------------------------
-// Reload edited to use customized grenade launcher reload logic
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- Reload edited to use customized grenade launcher reload logic
+-------------------------------------------------------------------------------
 
 local CT, mag
 
@@ -185,7 +184,7 @@ function SWEP:Reload()
 		return
 	end
 
-	if self.ReloadDelay or CT < self.ReloadWait or self.dt.State == CW_ACTION or self.ShotgunReloadState != 0 then
+	if self.ReloadDelay or CT < self.ReloadWait or self.dt.State == CW_ACTION or self.ShotgunReloadState ~= 0 then
 		return
 	end
 
@@ -203,7 +202,7 @@ function SWEP:Reload()
 		return
 	end
 
-	if self.Owner:KeyDown(IN_USE) and self.dt.State != CW_RUNNING then
+	if self.Owner:KeyDown(IN_USE) and self.dt.State ~= CW_RUNNING then
 		self:CycleFiremodes()
 		return
 	end
@@ -237,12 +236,12 @@ function SWEP:Reload()
 	self:beginReload()
 end
 
-//-----------------------------------------------------------------------------
-// beginReload edited to
-// - support stripper clip reload logic
-// - update reload times before using them
-// - use different shotgun reload logic and animations
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- beginReload edited to
+-- - support stripper clip reload logic
+-- - update reload times before using them
+-- - use different shotgun reload logic and animations
+-------------------------------------------------------------------------------
 
 local CT, mag, ammo, reloadTime, reloadHalt, anim, animPrefix, animSuffix, flag, unloadTime
 
@@ -256,7 +255,7 @@ function SWEP:beginReload()
 
 	self.lastMag = mag
 
-	if self.dt.INS2GLActive or (!self.ShotgunReload) then
+	if self.dt.INS2GLActive or not self.ShotgunReload then
 		if self.dt.INS2GLActive then
 			anim = "reload"
 		elseif mag == 0 then
@@ -301,11 +300,11 @@ function SWEP:beginReload()
 
 			if self.lastMag > 0 and flag == KK_INS2_STRIPPERCLIP_UNLOAD_ONE then
 				CustomizableWeaponry.actionSequence.new(self, unloadTime, nil, function()
-					if not self.ReloadDelay then return end	// melee attack interruption
+					if not self.ReloadDelay then return end	-- melee attack interruption
 
 					self:SetClip1(mag - 1)
 
-					if !CustomizableWeaponry_KK.ins2.discardEjectedAmmo then
+					if not CustomizableWeaponry_KK.ins2.discardEjectedAmmo then
 						self.Owner:SetAmmo(ammo + 1, self.Primary.Ammo)
 					end
 				end)
@@ -313,11 +312,11 @@ function SWEP:beginReload()
 
 			if flag == KK_INS2_REVOLVER_SPEED_UNLOAD then
 				CustomizableWeaponry.actionSequence.new(self, unloadTime, nil, function()
-					if not self.ReloadDelay then return end	// melee attack interruption
+					if not self.ReloadDelay then return end	-- melee attack interruption
 
 					self:SetClip1(0)
 
-					if !CustomizableWeaponry_KK.ins2.discardEjectedAmmo then
+					if not CustomizableWeaponry_KK.ins2.discardEjectedAmmo then
 						self.Owner:SetAmmo(ammo + mag, self.Primary.Ammo)
 					end
 				end)
@@ -347,11 +346,11 @@ function SWEP:beginReload()
 
 		if self.lastMag > 0 and flag == KK_INS2_STRIPPERCLIP_UNLOAD_ONE then
 			CustomizableWeaponry.actionSequence.new(self, unloadTime, nil, function()
-				if not self.ReloadDelay then return end	// melee attack interruption
+				if not self.ReloadDelay then return end	-- melee attack interruption
 
 				self:SetClip1(mag - 1)
 
-				if !CustomizableWeaponry_KK.ins2.discardEjectedAmmo then
+				if not CustomizableWeaponry_KK.ins2.discardEjectedAmmo then
 					self.Owner:SetAmmo(ammo + 1, self.Primary.Ammo)
 				end
 			end)
@@ -359,11 +358,11 @@ function SWEP:beginReload()
 
 		if flag == KK_INS2_REVOLVER_SPEED_UNLOAD then
 			CustomizableWeaponry.actionSequence.new(self, unloadTime, nil, function()
-				if not self.ReloadDelay then return end	// melee attack interruption
+				if not self.ReloadDelay then return end	-- melee attack interruption
 
 				self:SetClip1(0)
 
-				if !CustomizableWeaponry_KK.ins2.discardEjectedAmmo then
+				if not CustomizableWeaponry_KK.ins2.discardEjectedAmmo then
 					self.Owner:SetAmmo(ammo + mag, self.Primary.Ammo)
 				end
 			end)
@@ -417,7 +416,7 @@ function SWEP:beginReload()
 		if SERVER then
 			if self.WasEmpty and flag == KK_INS2_SHOTGUN_LOAD_FIRST then
 				CustomizableWeaponry.actionSequence.new(self, reloadTime, nil, function()
-					if self.ShotgunReloadState == 0 then return end	// melee attack interruption
+					if self.ShotgunReloadState == 0 then return end	-- melee attack interruption
 
 					self:SetClip1(mag + 1)
 					self.Owner:SetAmmo(ammo - 1, self.Primary.Ammo)
@@ -428,13 +427,13 @@ function SWEP:beginReload()
 				end)
 			end
 
-			if !self.WasEmpty and flag == KK_INS2_SHOTGUN_UNLOAD_ONE then
+			if not self.WasEmpty and flag == KK_INS2_SHOTGUN_UNLOAD_ONE then
 				CustomizableWeaponry.actionSequence.new(self, reloadTime, nil, function()
-					if self.ShotgunReloadState == 0 then return end	// melee attack interruption
+					if self.ShotgunReloadState == 0 then return end	-- melee attack interruption
 
 					self:SetClip1(mag - 1)
 
-					if !CustomizableWeaponry_KK.ins2.discardEjectedAmmo then
+					if not CustomizableWeaponry_KK.ins2.discardEjectedAmmo then
 						self.Owner:SetAmmo(ammo + 1, self.Primary.Ammo)
 					end
 				end)
@@ -442,11 +441,11 @@ function SWEP:beginReload()
 
 			if flag == KK_INS2_REVOLVER_SLOW_UNLOAD then
 				CustomizableWeaponry.actionSequence.new(self, reloadTime, nil, function()
-					if self.ShotgunReloadState == 0 then return end // its also possible that its already 2 because user pressed attack button
+					if self.ShotgunReloadState == 0 then return end -- its also possible that its already 2 because user pressed attack button
 
 					self:SetClip1(0)
 
-					if !CustomizableWeaponry_KK.ins2.discardEjectedAmmo then
+					if not CustomizableWeaponry_KK.ins2.discardEjectedAmmo then
 						self.Owner:SetAmmo(ammo + mag, self.Primary.Ammo)
 					end
 
@@ -467,9 +466,9 @@ function SWEP:beginReload()
 	self.Owner:SetAnimation(PLAYER_RELOAD)
 end
 
-//-----------------------------------------------------------------------------
-// finishReloadINS2GL loads customized grenade launcher
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- finishReloadINS2GL loads customized grenade launcher
+-------------------------------------------------------------------------------
 
 function SWEP:finishReloadINS2GL()
 	if self.dt.INS2GLActive then
@@ -485,9 +484,9 @@ function SWEP:finishReloadINS2GL()
 	end
 end
 
-//-----------------------------------------------------------------------------
-// finishReload edited to use customized grenade launcher reload logic
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- finishReload edited to use customized grenade launcher reload logic
+-------------------------------------------------------------------------------
 
 local mag, ammo
 
@@ -540,12 +539,12 @@ function SWEP:finishReload()
 	self.ReloadDelay = nil
 end
 
-//-----------------------------------------------------------------------------
-// finishReloadShotgun edited to
-// - support chambering on shotguns
-// - allow loading 1st round during reload_start sequence
-// - disallow reload interruption unless at least one round was loaded
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- finishReloadShotgun edited to
+-- - support chambering on shotguns
+-- - allow loading 1st round during reload_start sequence
+-- - disallow reload interruption unless at least one round was loaded
+-------------------------------------------------------------------------------
 
 local CT, keyDown, mag, ammo, anim, reloadTime, reloadHalt
 
@@ -580,7 +579,7 @@ function SWEP:finishReloadShotgun()
 
 			if SERVER then
 				CustomizableWeaponry.actionSequence.new(self, reloadTime, nil, function()
-					if not self.ReloadDelay then return end	// melee attack interruption
+					if not self.ReloadDelay then return end	-- melee attack interruption
 
 					self:SetClip1(mag + 1)
 					self.Owner:SetAmmo(ammo - 1, self.Primary.Ammo)
@@ -591,7 +590,7 @@ function SWEP:finishReloadShotgun()
 
 			local clipSize = self.Primary.ClipSize
 
-			if self.Chamberable and (self.ReloadFirstShell or !self.WasEmpty) then
+			if self.Chamberable and (self.ReloadFirstShell or not self.WasEmpty) then
 				clipSize = clipSize + 1
 			end
 
@@ -642,11 +641,11 @@ function SWEP:finishReloadShotgun()
 	end
 end
 
-//-----------------------------------------------------------------------------
-// isNearWall edited to
-// - use SWEP.WeaponLength in trace
-// - return whole trace result if true
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- isNearWall edited to
+-- - use SWEP.WeaponLength in trace
+-- - return whole trace result if true
+-------------------------------------------------------------------------------
 
 local mins, maxs = Vector(-8, -8, -1), Vector(8, 8, 1)
 
@@ -687,10 +686,10 @@ function SWEP:isNearWall()
 	return false
 end
 
-//-----------------------------------------------------------------------------
-// GetDeployTime edited to replace global delay calls used in older versions
-// of PrepareForPickup
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- GetDeployTime edited to replace global delay calls used in older versions
+-- of PrepareForPickup
+-------------------------------------------------------------------------------
 
 function SWEP:GetDeployTime()
 	-- if self.oneTimeDeploySpeed then
@@ -714,12 +713,12 @@ function SWEP:GetDeployTime()
 		end
 	end
 
-	return self.FirstDeployTime + 0.2 // woot
+	return self.FirstDeployTime + 0.2 -- woot
 end
 
-//-----------------------------------------------------------------------------
-//
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+--
+-------------------------------------------------------------------------------
 
 function SWEP:GetHolsterTime()
 	if self:hasInstalledGL() and self._currentGrenadeLauncher.ww2GrenadeLauncher and self.dt.INS2GLActive then
@@ -729,12 +728,12 @@ function SWEP:GetHolsterTime()
 	end
 end
 
-//-----------------------------------------------------------------------------
-// Holster edited to
-// - check for dt.PinPulled
-// - process custom callback category currently only used by one attachment
-// - remove redundant holster sound (should be played from animation soundtable)
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- Holster edited to
+-- - check for dt.PinPulled
+-- - process custom callback category currently only used by one attachment
+-- - remove redundant holster sound (should be played from animation soundtable)
+-------------------------------------------------------------------------------
 
 function SWEP:Holster(wep)
 	if not IsValid(wep) and not IsValid(self.SwitchWep) then
@@ -802,11 +801,11 @@ function SWEP:Holster(wep)
 	self.SuppressTime = nil
 end
 
-//-----------------------------------------------------------------------------
-// Initialize edited to initialize custom features
-// - ActiveAttachment and WElement state networking
-// - FirstDeploy animation logic
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- Initialize edited to initialize custom features
+-- - ActiveAttachment and WElement state networking
+-- - FirstDeploy animation logic
+-------------------------------------------------------------------------------
 
 function SWEP:Initialize()
 	self:updateReloadTimes()
@@ -826,15 +825,15 @@ function SWEP:Initialize()
 	end
 end
 
-//-----------------------------------------------------------------------------
-// unloadWeapon edited to
-// - only unload weapon when in CW Menu - for spawn preset plugin
-// - unload magazine if Mag System is installed
-// - play idle animation in case loaded and empty idle animations differ
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- unloadWeapon edited to
+-- - only unload weapon when in CW Menu - for spawn preset plugin
+-- - unload magazine if Mag System is installed
+-- - play idle animation in case loaded and empty idle animations differ
+-------------------------------------------------------------------------------
 
 function SWEP:unloadWeapon(force)
-	if !force and self.dt.State != CW_CUSTOMIZE then return end
+	if not force and self.dt.State ~= CW_CUSTOMIZE then return end
 
 	weapons.GetStored("cw_base").unloadWeapon(self)
 
@@ -851,19 +850,19 @@ function SWEP:unloadWeapon(force)
 	end
 end
 
-//-----------------------------------------------------------------------------
-// isReloading is only used for suppressing bipod angles during reload
-// - we dont want that happening with INS2 SWEPs
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- isReloading is only used for suppressing bipod angles during reload
+-- - we dont want that happening with INS2 SWEPs
+-------------------------------------------------------------------------------
 
 function SWEP:isReloading()
 	return false
 end
 
-//-----------------------------------------------------------------------------
-// getReloadProgress
-// - edited to show progress of any anim listed in SWEP.reloadProgressAnims
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- getReloadProgress
+-- - edited to show progress of any anim listed in SWEP.reloadProgressAnims
+-------------------------------------------------------------------------------
 
 function SWEP:getReloadProgress()
 	local length = self.reloadProgressAnims[self.Sequence]
@@ -875,10 +874,10 @@ function SWEP:getReloadProgress()
 	return nil
 end
 
-//-----------------------------------------------------------------------------
-// CalculateSpread
-// - edited to support prone mod
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- CalculateSpread
+-- - edited to support prone mod
+-------------------------------------------------------------------------------
 
 function SWEP:getProneSpreadModifier()
 	return self.dt.State == CW_AIMING and 0.8 or 0.75
@@ -924,10 +923,10 @@ function SWEP:CalculateSpread(vel, dt)
 	end
 end
 
-//-----------------------------------------------------------------------------
-// setBodygroup
-// - thanks to DOI updates we ve got outbreak of ani_bodies here
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- setBodygroup
+-- - thanks to DOI updates we ve got outbreak of ani_bodies here
+-------------------------------------------------------------------------------
 
 function SWEP:setBodygroup(main, sub)
 	if SERVER then

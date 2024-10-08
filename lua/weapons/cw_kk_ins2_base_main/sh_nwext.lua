@@ -1,8 +1,7 @@
-
-//-----------------------------------------------------------------------------
-// CW_KK_INS2_NWAA_single broadcasts most recent change of attachment active
-// state to all clients except weapon owner.
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- CW_KK_INS2_NWAA_single broadcasts most recent change of attachment active
+-- state to all clients except weapon owner.
+-------------------------------------------------------------------------------
 
 if SERVER then
 	util.AddNetworkString("CW_KK_INS2_NWAA_single")

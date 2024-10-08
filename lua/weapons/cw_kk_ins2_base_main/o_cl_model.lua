@@ -20,9 +20,9 @@ local AngUp = _ang.Up
 local AngRight = _ang.Right
 local AngForward = _ang.Forward
 
-//-----------------------------------------------------------------------------
-// getMuzzlePosition edited to be usable in third person
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- getMuzzlePosition edited to be usable in third person
+-------------------------------------------------------------------------------
 
 local att, vm
 
@@ -35,7 +35,7 @@ function SWEP:getMuzzlePosition()
 		return muz
 	end
 
-	if self.MuzzleAttachment != 0 then
+	if self.MuzzleAttachment ~= 0 then
 		return EntGetAttachment(self.CW_VM, self.MuzzleAttachment)
 	end
 
@@ -44,10 +44,10 @@ function SWEP:getMuzzlePosition()
 	return muz
 end
 
-//-----------------------------------------------------------------------------
-// LookupBone("[__INVALIDBONE__]") returns nil
-// so I store int that I used with GetBoneName
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- LookupBone("[__INVALIDBONE__]") returns nil
+-- so I store int that I used with GetBoneName
+-------------------------------------------------------------------------------
 
 function SWEP:buildBoneTable()
 	local vm = self.CW_VM
@@ -65,9 +65,9 @@ function SWEP:buildBoneTable()
 	end
 end
 
-//-----------------------------------------------------------------------------
-// createCustomVM edited to initialize additional models
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- createCustomVM edited to initialize additional models
+-------------------------------------------------------------------------------
 
 function SWEP:createCustomVM(mdl)
 	self.CW_VM = self:createManagedCModel(mdl, RENDERGROUP_BOTH)
@@ -91,16 +91,16 @@ function SWEP:createCustomVM(mdl)
 	self.CW_KK_KNIFE:SetNoDraw(true)
 	self.CW_KK_KNIFE:SetupBones()
 
-	// not rly a viewmodel but still need to stick it somewhere
+	-- not rly a viewmodel but still need to stick it somewhere
 
 	self.WMEnt = self:createManagedCModel(self.WorldModel, RENDERGROUP_BOTH)
 	self.WMEnt:SetNoDraw(true)
 	self.WMEnt:SetupBones()
 end
 
-//-----------------------------------------------------------------------------
-// drawViewModel edited to draw quick knife viewmodel
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- drawViewModel edited to draw quick knife viewmodel
+-------------------------------------------------------------------------------
 
 function SWEP:drawViewModel()
 	if not self.CW_VM then
@@ -140,9 +140,9 @@ function SWEP:drawQuickViewModel(vm)
 	cam.IgnoreZ(false)
 end
 
-//-----------------------------------------------------------------------------
-// _drawViewModel edited to draw hands-model entity and viewmodel shells
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- _drawViewModel edited to draw hands-model entity and viewmodel shells
+-------------------------------------------------------------------------------
 
 local cvAmmoHud = GetConVar("cw_customhud_ammo")
 local cvSVM = CustomizableWeaponry_KK.ins2.conVars.main["cw_kk_ins2_shell_vm"]
@@ -164,7 +164,7 @@ function SWEP:_drawViewModel()
 	local CT = CurTime()
 
 	if CT > self.grenadeTime and CT > self.knifeTime then
-		if self.CW_KK_HANDS:GetParent() != self.CW_VM then
+		if self.CW_KK_HANDS:GetParent() ~= self.CW_VM then
 			self.CW_KK_HANDS:SetParent(self.CW_VM)
 		end
 
@@ -187,15 +187,15 @@ function SWEP:_drawViewModel()
 	end
 end
 
-//-----------------------------------------------------------------------------
-// createGrenadeModel contents moved to createCustomVM
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- createGrenadeModel contents moved to createCustomVM
+-------------------------------------------------------------------------------
 
 function SWEP:createGrenadeModel() end
 
-//-----------------------------------------------------------------------------
-// drawGrenade edited to draw hands-model entity
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- drawGrenade edited to draw hands-model entity
+-------------------------------------------------------------------------------
 
 function SWEP:drawGrenade()
 	if CurTime() > self.grenadeTime then
@@ -220,9 +220,9 @@ function SWEP:drawGrenade()
 	cam.IgnoreZ(false)
 end
 
-//-----------------------------------------------------------------------------
-// drawKKKnife is exactly same as drawGrenade
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- drawKKKnife is exactly same as drawGrenade
+-------------------------------------------------------------------------------
 
 function SWEP:drawKKKnife()
 	if CurTime() > self.knifeTime then
@@ -247,13 +247,13 @@ function SWEP:drawKKKnife()
 	cam.IgnoreZ(false)
 end
 
-//-----------------------------------------------------------------------------
-// setupAttachmentModels edited to support
-// - custom attach points, bone-merging
-// - globally pre-set sub-material override
-// - individually set material and sub-material override
-// - WElement init
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- setupAttachmentModels edited to support
+-- - custom attach points, bone-merging
+-- - globally pre-set sub-material override
+-- - individually set material and sub-material override
+-- - WElement init
+-------------------------------------------------------------------------------
 
 function SWEP:setupAttachmentModels()
 	if self.AttachmentModelsVM then
@@ -350,9 +350,9 @@ function SWEP:_setupAttachmentModelMerge(v)
 	end
 end
 
-//-----------------------------------------------------------------------------
-// drawAttachments edited to support custom attach points and lighting recomp.
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- drawAttachments edited to support custom attach points and lighting recomp.
+-------------------------------------------------------------------------------
 
 function SWEP:drawAttachments()
 	if not self.AttachmentModelsVM then
@@ -362,7 +362,7 @@ function SWEP:drawAttachments()
 	local FT = FrameTime()
 
 	for k, v in pairs(self.AttachmentModelsVM) do
-		if v.active and self._skipDrawingScope != k then
+		if v.active and self._skipDrawingScope ~= k then
 			self:_drawAttachmentModels(v)
 		end
 	end
@@ -424,7 +424,7 @@ function SWEP:_drawAttachmentModel(v)
 	ang = parent:GetAngles()
 
 	if v.merge then
-		-- if model:GetParent() != parent then
+		-- if model:GetParent() ~= parent then
 			-- model:SetParent(parent)
 		-- end
 	else
@@ -453,7 +453,7 @@ function SWEP:_drawAttachmentModel(v)
 		model:SetupBones()
 	end
 
-	if !v.nodraw then
+	if not v.nodraw then
 		doRecompute = v.rLight and cvarFixScopes:GetInt() == 1
 		recomputeLighting(doRecompute and 1 or false, pos, ang)
 			model:DrawModel()
@@ -461,26 +461,27 @@ function SWEP:_drawAttachmentModel(v)
 	end
 end
 
-//-----------------------------------------------------------------------------
-// DrawWorldModel edited to support
-// - attachment world models (WElements)
-// - 3rd person 3D2D HUD
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- DrawWorldModel edited to support
+-- - attachment world models (WElements)
+-- - 3rd person 3D2D HUD
+-------------------------------------------------------------------------------
 
 function SWEP:DrawWorldModel()
+    local TAG="cw_kk DrawWorldModel"
 	if self.dt.Safe then
-		if self.CHoldType != self.RunHoldType then
+		if self.CHoldType ~= self.RunHoldType then
 			self:SetHoldType(self.RunHoldType)
 			self.CHoldType = self.RunHoldType
 		end
 	else
 		if self.dt.State == CW_RUNNING or self.dt.State == CW_ACTION then
-			if self.CHoldType != self.RunHoldType then
+			if self.CHoldType ~= self.RunHoldType then
 				self:SetHoldType(self.RunHoldType)
 				self.CHoldType = self.RunHoldType
 			end
 		else
-			if self.CHoldType != self.NormalHoldType then
+			if self.CHoldType ~= self.NormalHoldType then
 				self:SetHoldType(self.NormalHoldType)
 				self.CHoldType = self.NormalHoldType
 			end
@@ -498,6 +499,7 @@ function SWEP:DrawWorldModel()
 			m = EntGetBoneMatrix(self.Owner, EntLookupBone(self.Owner, "ValveBiped.Bip01_R_Hand"))
 
 			if not m then
+                Log.d(TAG, "return, could not get matrix")
 				return
 			end
 		end
@@ -517,7 +519,8 @@ function SWEP:DrawWorldModel()
 		ang = self:GetAngles()
 	end
 
-	if !IsValid(self.WMEnt) then
+	if not IsValid(self.WMEnt) then
+        Log.d(TAG, "return, WMEnt not valid")
 		return
 	end
 
@@ -535,7 +538,10 @@ function SWEP:DrawWorldModel()
 	end
 
 	if not overrideVM then
+        Log.d(TAG, "calling DrawModel")
 		self.WMEnt:DrawModel()
+    else
+        Log.d(TAG, "overrideVM")
 	end
 
 	self:drawAttachmentsWorld(self.WMEnt)
@@ -556,9 +562,9 @@ function SWEP:DrawWorldModel()
 	self.CustomizationMenuScale = self.CustomizationMenuScale / 1.5
 end
 
-//-----------------------------------------------------------------------------
-// initialize attachment world models (WElements)
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- initialize attachment world models (WElements)
+-------------------------------------------------------------------------------
 
 function SWEP:setupAttachmentWModels()
 	if self.AttachmentModelsWM then
@@ -625,12 +631,12 @@ function SWEP:setupAttachmentWModels()
 	end
 end
 
-//-----------------------------------------------------------------------------
-// draw attachment world models (WElements)
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- draw attachment world models (WElements)
+-------------------------------------------------------------------------------
 
 function SWEP:drawAttachmentsWorld(parent)
-	if !IsValid(parent) then
+	if not IsValid(parent) then
 		return
 	end
 
@@ -640,7 +646,7 @@ function SWEP:drawAttachmentsWorld(parent)
 				model = v.ent
 
 				if v.merge then
-					-- if model:GetParent() != parent then
+					-- if model:GetParent() ~= parent then
 						-- model:SetParent(parent)
 					-- end
 				else
@@ -667,7 +673,7 @@ function SWEP:drawAttachmentsWorld(parent)
 					model:SetAngles(ang)
 				end
 
-				if !v.nodraw then
+				if not v.nodraw then
 					model:DrawModel()
 				end
 			end
@@ -675,9 +681,9 @@ function SWEP:drawAttachmentsWorld(parent)
 	end
 end
 
-//-----------------------------------------------------------------------------
-// processFOVChanges edited to take dt.INS2GLActive into account
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- processFOVChanges edited to take dt.INS2GLActive into account
+-------------------------------------------------------------------------------
 
 function SWEP:processFOVChanges(deltaTime)
 	if self.dt.State == CW_AIMING then
@@ -697,9 +703,9 @@ function SWEP:processFOVChanges(deltaTime)
 	self.ViewModelFOV = self.CurVMFOV
 end
 
-//-----------------------------------------------------------------------------
-// scaleMovement edited to use sprint state dependent base values
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- scaleMovement edited to use sprint state dependent base values
+-------------------------------------------------------------------------------
 
 local sth = CustomizableWeaponry_KK.ins2.conVars.main["cw_kk_ins2_sprint"]
 
@@ -714,7 +720,7 @@ function SWEP:scaleMovement(val, mod)
 		end
 	end
 
-	if self.Slot != 2 and self.Slot != 3 then
+	if self.Slot ~= 2 and self.Slot ~= 3 then
 		if self.Sequence:find("sprint") then
 			scale = self.ViewModelMovementScale_sprint
 		else
@@ -733,21 +739,21 @@ function SWEP:scaleMovement(val, mod)
 	return val * scale * mod
 end
 
-//-----------------------------------------------------------------------------
-// DrawVMHandsModel detached from and shared between
-// _drawViewModel, drawGrenade and drawKKKnife
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- DrawVMHandsModel detached from and shared between
+-- _drawViewModel, drawGrenade and drawKKKnife
+-------------------------------------------------------------------------------
 
 function SWEP:DrawVMHandsModel()
 	local gm = self.Owner:GetHands()
 
-	if !IsValid(gm) then
+	if not IsValid(gm) then
 		self.CW_KK_HANDS:DrawModel()
 		return
 	end
 
 	if self.UseGMHands then
-		if gm:GetParent() != self.CW_KK_HANDS then
+		if gm:GetParent() ~= self.CW_KK_HANDS then
 			gm:SetParent(self.CW_KK_HANDS)
 			gm:AddEffects(EF_BONEMERGE)
 			gm:AddEffects(EF_BONEMERGE_FASTCULL)

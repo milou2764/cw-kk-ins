@@ -1,5 +1,5 @@
 
-// Content Status
+-- Content Status
 
 local CCSectionBuilder = {}
 
@@ -19,7 +19,7 @@ function CCSectionBuilder:_packLabelDockMargin(panel)
 	panel:DockMargin(8,0,8,0)
 end
 
-// content packs
+-- content packs
 function CCSectionBuilder:_addLineBaseGame(panel)
 	local ok = self.icm({Folder = "weapons/baseGameContentOK"})
 	local label = panel:AddControl("Label", {Text =
@@ -88,7 +88,7 @@ function CCSectionBuilder:_addLineDOIWW1Mod(panel)
 	label:SetTextColor(ok and self.colOk or self.colNOk)
 end
 
-// weapon packs
+-- weapon packs
 function CCSectionBuilder:_addSectionBase(panel)
 	local backgroundPanel = vgui.Create("DPanel", panel)
 	self:_packLabelDockMargin(backgroundPanel)
@@ -290,11 +290,11 @@ function CCSectionBuilder:_addSectionDOIWW1(panel)
 	backgroundPanel:SizeToContents()
 end
 
-// weapon pack order
+-- weapon pack order
 function CCSectionBuilder:_updatePanel()
 	local panel = self._panel
 
-	if !IsValid(panel) then return end
+	if not IsValid(panel) then return end
 
 	-- panel:ClearControls()
 
@@ -311,7 +311,7 @@ function CCSectionBuilder:SetPanel(panel)
 	self:_updatePanel()
 end
 
-// Reset button
+-- Reset button
 
 local presetFastest = {
 	["cw_kk_ins2_animate_reticle"] = 1,
@@ -345,7 +345,7 @@ local function addSettingsPresetSection(panel)
 	}):DockMargin(8, 0, 8, 8)
 end
 
-// Other
+-- Other
 
 local function updateRigSkinSlider(slider)
 	slider:SetMinMax(0, 0)
@@ -355,12 +355,12 @@ local function updateRigSkinSlider(slider)
 	local ply = LocalPlayer()
 	local wep = ply:GetActiveWeapon()
 
-	if !IsValid(wep) then
+	if not IsValid(wep) then
 		slider:SetText("Equip INS SWEP.")
 		return
 	end
 
-	if !wep.KKINS2Wep then
+	if not wep.KKINS2Wep then
 		slider:SetText("Equip INS SWEP.")
 		return
 	end
@@ -462,7 +462,7 @@ local function addShellCleanupSection(panel)
 	end)
 end
 
-// actual panel
+-- actual panel
 
 CustomizableWeaponry_KK.panels =
 	CustomizableWeaponry_KK.panels or
@@ -475,16 +475,16 @@ CustomizableWeaponry_KK.panels.ins2 = function(panel)
 
 	panel:AddControl("Label", {Text = "INS2/DOI Pack Settings:"}):DockMargin(0, 0, 8, 0)
 
-	// cfg
+	-- cfg
 	addSettingsPresetSection(panel)
 
-	// rigs
+	-- rigs
 	addRigsSection(panel)
 
-	// shell sound function
+	-- shell sound function
 	addShellSoundSection(panel)
 
-	// shell life time
+	-- shell life time
 	panel:AddControl("Slider", {
 		Label = "Shell life time:",
 		Type = "Float",
@@ -493,34 +493,34 @@ CustomizableWeaponry_KK.panels.ins2 = function(panel)
 		Command = "cw_kk_ins2_shell_time"
 	}):DockMargin(8, 0, 8, 0)
 
-	// shell cleanup
+	-- shell cleanup
 	addShellCleanupSection(panel)
 
-	// VM shells
+	-- VM shells
 	panel:AddControl("CheckBox", {
 		Label = "Alternative shell rendering function",
 		Command = "cw_kk_ins2_shell_vm"
 	}):DockMargin(8, 8, 8, 0)
 
-	// always animated reticles
+	-- always animated reticles
 	panel:AddControl("CheckBox", {
 		Label = "Always animate stencil sight reticle",
 		Command = "cw_kk_ins2_animate_reticle"
 	}):DockMargin(8, 8, 8, 0)
 
-	// slow grenade attack swap
+	-- slow grenade attack swap
 	panel:AddControl("CheckBox", {
 		Label = "INS2-style slow grenade attacks (primary = cook)",
 		Command = "cw_kk_ins2_ins_nade_ctrls"
 	}):DockMargin(8, 8, 8, 0)
 
-	// scope experiments - lighting
+	-- scope experiments - lighting
 	panel:AddControl("CheckBox", {
 		Label = "Fix shadows + break phong on RT Scopes.",
 		Command = "cw_kk_ins2_scopelightingfix"
 	}):DockMargin(8, 8, 8, 0)
 
-	// sprint anims vs sprint codeims
+	-- sprint anims vs sprint codeims
 	panel:AddControl("CheckBox", {
 		Label = "Use model sprint anims instead of coded movement.",
 		Command = "cw_kk_ins2_sprint"
@@ -528,7 +528,7 @@ CustomizableWeaponry_KK.panels.ins2 = function(panel)
 
 	if not CustomizableWeaponry_KK.HOME then return end
 
-	// cam3d experiments
+	-- cam3d experiments
 	panel:AddControl("CheckBox", {
 		Label = "Draw viewmodels in render target scopes",
 		Command = "cw_kk_ins2_draw_vm_in_rt"

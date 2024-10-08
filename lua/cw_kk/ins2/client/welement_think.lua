@@ -1,6 +1,7 @@
-
 CustomizableWeaponry_KK.ins2.welementThink = CustomizableWeaponry_KK.ins2.welementThink or {}
-CustomizableWeaponry_KK.ins2.welementThink.IsValid = function() return true end
+CustomizableWeaponry_KK.ins2.welementThink.IsValid = function()
+    return true
+end
 
 function CustomizableWeaponry_KK.ins2.welementThink:_addWeapon(wep)
 	self._cache = self._cache or {}
@@ -38,7 +39,11 @@ function CustomizableWeaponry_KK.ins2.welementThink:think()
 	end
 end
 
-hook.Add("Think", CustomizableWeaponry_KK.ins2.welementThink, CustomizableWeaponry_KK.ins2.welementThink.think)
+hook.Add(
+    "Think",
+    CustomizableWeaponry_KK.ins2.welementThink,
+    CustomizableWeaponry_KK.ins2.welementThink.think
+)
 
 CustomizableWeaponry_KK.ins2.welementThink.templates = {
 	bipod = function(wep, welement)
@@ -85,10 +90,10 @@ end
 function CustomizableWeaponry_KK.ins2.welementThink:add(id, func)
 	if not id then return end
 
-	func = self.templates[func] or func // if template exists, use it
+	func = self.templates[func] or func -- if template exists, use it
 
 	self._funcs = self._funcs or {}
-	self._funcs[id] = func // if nil is passed, remove existing
+	self._funcs[id] = func -- if nil is passed, remove existing
 end
 
 CustomizableWeaponry_KK.ins2.welementThink:add("cw_kk_ins2_rpg", "launcher")
