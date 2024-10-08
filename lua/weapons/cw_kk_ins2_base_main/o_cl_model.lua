@@ -94,11 +94,9 @@ function SWEP:createCustomVM(mdl)
 
 	-- not rly a viewmodel but still need to stick it somewhere
 
-    Log.d("SWEP:createCustomVM", "drawing WMEnt for " .. self.ClassName)
 	self.WMEnt = self:createManagedCModel(self.WorldModel, RENDERGROUP_BOTH)
 	self.WMEnt:SetNoDraw(true)
 	self.WMEnt:SetupBones()
-    Log.d("SWEP:createCustomVM", "IsValid(WMEnt) : " .. tostring(IsValid(self.WMEnt)))
 end
 
 -------------------------------------------------------------------------------
@@ -522,7 +520,10 @@ function SWEP:DrawWorldModel()
 	end
 
 	if not IsValid(self.WMEnt) then
-		return
+        Log.d(TAG, "redrawing WMEnt")
+        self.WMEnt = self:createManagedCModel(self.WorldModel, RENDERGROUP_BOTH)
+        self.WMEnt:SetNoDraw(true)
+        self.WMEnt:SetupBones()
 	end
 
 	self.WMEnt:SetPos(pos)
