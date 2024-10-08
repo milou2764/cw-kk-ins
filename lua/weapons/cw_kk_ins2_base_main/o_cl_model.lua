@@ -98,7 +98,7 @@ function SWEP:createCustomVM(mdl)
 	self.WMEnt = self:createManagedCModel(self.WorldModel, RENDERGROUP_BOTH)
 	self.WMEnt:SetNoDraw(true)
 	self.WMEnt:SetupBones()
-    Log.d("SWEP:createCustomVM", "IsValid(WMEnt) : " .. IsValid(self.WMEnt))
+    Log.d("SWEP:createCustomVM", "IsValid(WMEnt) : " .. tostring(IsValid(self.WMEnt)))
 end
 
 -------------------------------------------------------------------------------
